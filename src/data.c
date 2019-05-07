@@ -118,8 +118,8 @@ matrix load_image_augment_paths(char **paths, int n, int min, int max, int size,
         } else {
             crop = random_augment_image(im, angle, aspect, min, max, size, size);
         }
-        int flip = rand()%2;
-        if (flip) flip_image(crop);
+        //int flip = rand()%2;
+        //if (flip) flip_image(crop);
         random_distort_image(crop, hue, saturation, exposure);
 
         /*
@@ -381,7 +381,7 @@ void fill_truth_iseg(char *path, int num_boxes, float *truth, int classes, int w
         int *rle = read_intlist(buff, &n, 0);
         load_rle(part, rle, n);
         image sized = rotate_crop_image(part, aug.rad, aug.scale, aug.w, aug.h, aug.dx, aug.dy, aug.aspect);
-        if(flip) flip_image(sized);
+        //if(flip) flip_image(sized);
 
         image mask = resize_image(sized, mw, mh);
         truth[i*(mw*mh+1)] = id;
@@ -418,7 +418,7 @@ void fill_truth_mask(char *path, int num_boxes, float *truth, int classes, int w
         int *rle = read_intlist(buff, &n, 0);
         load_rle(part, rle, n);
         image sized = rotate_crop_image(part, aug.rad, aug.scale, aug.w, aug.h, aug.dx, aug.dy, aug.aspect);
-        if(flip) flip_image(sized);
+        //if(flip) flip_image(sized);
         box b = bound_image(sized);
         if(b.w > 0){
             image crop = crop_image(sized, b.x, b.y, b.w, b.h);
@@ -755,8 +755,8 @@ data load_data_seg(int n, char **paths, int m, int w, int h, int classes, int mi
         augment_args a = random_augment_args(orig, angle, aspect, min, max, w, h);
         image sized = rotate_crop_image(orig, a.rad, a.scale, a.w, a.h, a.dx, a.dy, a.aspect);
 
-        int flip = rand()%2;
-        if(flip) flip_image(sized);
+        //int flip = rand()%2;
+        //if(flip) flip_image(sized);
         random_distort_image(sized, hue, saturation, exposure);
         d.X.vals[i] = sized.data;
 
@@ -764,7 +764,7 @@ data load_data_seg(int n, char **paths, int m, int w, int h, int classes, int mi
         //image mask = make_image(orig.w, orig.h, classes+1);
         image sized_m = rotate_crop_image(mask, a.rad, a.scale/div, a.w/div, a.h/div, a.dx/div, a.dy/div, a.aspect);
 
-        if(flip) flip_image(sized_m);
+        //if(flip) flip_image(sized_m);
         d.y.vals[i] = sized_m.data;
 
         free_image(orig);
@@ -800,8 +800,8 @@ data load_data_iseg(int n, char **paths, int m, int w, int h, int classes, int b
         augment_args a = random_augment_args(orig, angle, aspect, min, max, w, h);
         image sized = rotate_crop_image(orig, a.rad, a.scale, a.w, a.h, a.dx, a.dy, a.aspect);
 
-        int flip = rand()%2;
-        if(flip) flip_image(sized);
+        int flip = 0;//rand()%2;
+        //if(flip) flip_image(sized);
         random_distort_image(sized, hue, saturation, exposure);
         d.X.vals[i] = sized.data;
         //show_image(sized, "image");
@@ -840,8 +840,8 @@ data load_data_mask(int n, char **paths, int m, int w, int h, int classes, int b
         augment_args a = random_augment_args(orig, angle, aspect, min, max, w, h);
         image sized = rotate_crop_image(orig, a.rad, a.scale, a.w, a.h, a.dx, a.dy, a.aspect);
 
-        int flip = rand()%2;
-        if(flip) flip_image(sized);
+        int flip = 0;//rand()%2;
+        //if(flip) flip_image(sized);
         random_distort_image(sized, hue, saturation, exposure);
         d.X.vals[i] = sized.data;
         //show_image(sized, "image");
@@ -903,7 +903,7 @@ data load_data_region(int n, char **paths, int m, int w, int h, int size, int cl
         float dy = ((float)ptop /oh)/sy;
 
         image sized = resize_image(cropped, w, h);
-        if(flip) flip_image(sized);
+        //if(flip) flip_image(sized);
         random_distort_image(sized, hue, saturation, exposure);
         d.X.vals[i] = sized.data;
 
@@ -1022,7 +1022,7 @@ data load_data_swag(char **paths, int n, int classes, float jitter)
     float dy = ((float)ptop /h)/sy;
 
     image sized = resize_image(cropped, w, h);
-    if(flip) flip_image(sized);
+    //if(flip) flip_image(sized);
     d.X.vals[0] = sized.data;
 
     fill_truth_swag(random_path, d.y.vals[0], classes, flip, dx, dy, 1./sx, 1./sy);
@@ -1074,8 +1074,8 @@ data load_data_detection(int n, char **paths, int m, int w, int h, int boxes, in
 
         random_distort_image(sized, hue, saturation, exposure);
 
-        int flip = rand()%2;
-        if(flip) flip_image(sized);
+        int flip = 0;//rand()%2;
+        //if(flip) flip_image(sized);
         d.X.vals[i] = sized.data;
 
 
@@ -1244,8 +1244,8 @@ data load_data_super(char **paths, int n, int m, int w, int h, int scale)
     for(i = 0; i < n; ++i){
         image im = load_image_color(paths[i], 0, 0);
         image crop = random_crop_image(im, w*scale, h*scale);
-        int flip = rand()%2;
-        if (flip) flip_image(crop);
+        //int flip = rand()%2;
+        //if (flip) flip_image(crop);
         image resize = resize_image(crop, w, h);
         d.X.vals[i] = resize.data;
         d.y.vals[i] = crop.data;
